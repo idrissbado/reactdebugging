@@ -1,90 +1,101 @@
-# Getting Started with the React Bug Shop Demo
+# Debugging the React App: Pilfering Pillbug
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/kamranayub/pluralsight-course-react-debugging)
+This document explains the steps taken to debug and fix issues in the React app for the Pilfering Pillbug component. Below is a detailed explanation of the changes made and the reasoning behind them.
 
-The fastest way to jump into the demo experience and solve the challenges is by running in the GitHub Codespace which is a preconfigured development environment with everything you need to follow along with the course.
+## Table of Contents
+- [Issues Identified](#issues-identified)
+- [Changes Made](#changes-made)
+- [How to Test](#how-to-test)
+- [Key Learnings](#key-learnings)
 
-Once you're in, simply run:
+## Issues Identified
 
-    npm start
+### Unused useEffect Import:
+The `useEffect` hook was imported but never used in the code, leading to a linting warning.
 
-To start the dev server, and Codespaces will prompt you to open a hosted URL in the browser to view the app.
+### Incorrect Prop in PurchaseSummary:
+The `PurchaseSummary` component expected a prop named `purchaseLikability`, but the parent component (`PilferingPillbug`) was passing `liked`. This caused the purchase summary text to display incorrectly.
 
-Alternatively, you can clone the project locally and configure your own local dev environment.
+### Inconsistent Prop Naming:
+The `PurchaseSummary` component used `purchaseLevel`, but the parent component passed `level`. This inconsistency caused issues in rendering the correct purchase level.
 
-## Solving the Challenges
+### Missing bug Definition:
+The `bug` object was used in the `Template` component but was not defined in the provided code.
 
-The goal is to catch all the bugs in the shop. Each bug comes with a set of checks you need to make pass. You'll need to refactor and update the code.
+## Changes Made
 
-The videos in the course provide the solutions to each challenge but there are often multiple ways to solve a problem with React. If you're stuck, reference the videos or explore on your own!
+### 1. Removed Unused useEffect Import
+- **Reason**: The `useEffect` hook was imported but not used, causing a linting warning.
+- **Change**: Removed the unused import.
 
----
+```javascript
+// Before
+import { useEffect, useState } from "react";
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+// After
+import { useState } from "react";
+### 2. Fixed Prop Naming in PurchaseSummary
+- **Reason**: The `PurchaseSummary` component expected `purchaseLikability`, but the parent component passed `liked`.
+- **Change**: Updated the `PurchaseSummary` component to use the `liked` prop instead of `purchaseLikability`.
 
-## Available Scripts
+```javascript
+// Before
+function PurchaseSummary({ purchaseLevel, purchaseLikability }) {
+  return (
+    <Text data-test="summary" color="text-weak">
+      You are purchasing a level {purchaseLevel} {bug.name} that you{" "}
+      {purchaseLikability ?? "haven't decided if you like or not"}
+    </Text>
+  );
+}
 
-In the project directory, you can run:
+// After
+function PurchaseSummary({ level, liked }) {
+  return (
+    <Text data-test="summary" color="text-weak">
+      You are purchasing a level {level} {bug.name} that you{" "}
+      {liked === "like" ? "like" : liked === "dislike" ? "dislike" : "haven't decided if you like or not"}
+    </Text>
+  );
+}
 
-### `npm start`
+### 3. Ensured Consistent Prop Naming
+- **Reason**: The `PurchaseSummary` component used `purchaseLevel`, but the parent component passed `level`.
+- **Change**: Updated the `PurchaseSummary` component to use the `level` prop.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```javascript
+// Before
+function PurchaseSummary({ purchaseLevel, liked }) {
+  return (
+    <Text data-test="summary" color="text-weak">
+      You are purchasing a level {purchaseLevel} {bug.name} that you{" "}
+      {liked === "like" ? "like" : liked === "dislike" ? "dislike" : "haven't decided if you like or not"}
+    </Text>
+  );
+}
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+// After
+function PurchaseSummary({ level, liked }) {
+  return (
+    <Text data-test="summary" color="text-weak">
+      You are purchasing a level {level} {bug.name} that you{" "}
+      {liked === "like" ? "like" : liked === "dislike" ? "dislike" : "haven't decided if you like or not"}
+    </Text>
+  );
+}
+### 4. Added Missing Bug Definition
+- **Reason**: The `bug` object was used in the `Template` component but was not defined.
+- **Change**: Ensured the `bug` object was defined with the required properties.
 
-### `npm test`
+```javascript
+// Added the missing bug definition
+export const bug = {
+  title: "Passing Props",
+  subtitle:
+    "this pilfering pillbug can cause confusion and chaos when trying to modify props or state",
+  name: "Pilfering Pillbug",
+  price: "$7.99",
+  route: "/bug/pilfering-pillbug",
+  component: Bug,
+};
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
