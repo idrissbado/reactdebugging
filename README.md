@@ -1,7 +1,8 @@
 # Debugging the React App: Pilfering Pillbug
 
 This document explains the steps taken to debug and fix issues in the React app for the Pilfering Pillbug component. Below is a detailed explanation of the changes made and the reasoning behind them.
-![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/b52a7a87-0c07-4e29-abf0-2bd0699107bc)
+
 
 
 ## Table of Contents
