@@ -7,6 +7,8 @@ This document explains the steps taken to debug and fix issues in the React app 
 - [Changes Made](#changes-made)
 - [How to Test](#how-to-test)
 - [Key Learnings](#key-learnings)
+- ![Uploading image.png…]()
+
 
 ## Issues Identified
 
